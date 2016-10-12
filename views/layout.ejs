@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+<head>
+    <title>Angular WYSIWYG rich text editor</title>
+    <link rel="stylesheet" href="editor.css">
+    <link href="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+</head>
+<body style="margin:0; padding:25px; font:12px Verdana,Arial;" ng-controller="demoController" ng-cloak>
+    <h2>ngWYSIWYG - Angular real rich text editor.</h2>
+    <wysiwyg-edit content="content" api="api" econfig="editorConfig"></wysiwyg-edit>
+
+    <!-- load assets -->
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.17/angular.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.17/angular-sanitize.min.js"></script>
+
+    <script src="wysiwyg.js"></script>
+    <script>
+    angular.module('myApp', ['ngWYSIWYG']).
+    controller('demoController', ['$scope', '$log', '$http', function($scope, $log, $http) {
+        // $scope.content = '<p><strong>Hello World!</strong></p><img style="width: 30%;" src="https://upload.wikimedia.org/wikipedia/commons/c/ca/AngularJS_logo.svg">';
+        $http.get('mydoc.html').then(function(response) {
+          $scope.content = response.data;
+        });
+        $scope.editorConfig = {
+        sanitize: false,
+        toolbar: [
+            { name: 'basicStyling', items: ['addBlank', 'addNew', 'save', '-', 'bold', 'italic', 'underline', 'strikethrough', 'code', 'subscript', 'superscript', '-', 'leftAlign', 'centerAlign', 'rightAlign', 'blockJustify', '-'] },
+            { name: 'paragraph', items: ['orderedList', 'unorderedList', 'outdent', 'indent', '-'] },
+            { name: 'doers', items: ['removeFormatting', 'undo', 'redo', '-'] },
+            { name: 'colors', items: ['fontColor', 'backgroundColor', '-'] },
+            { name: 'links', items: ['image', 'hr', 'symbols', 'link', 'unlink', '-'] },
+            { name: 'tools', items: ['print', 'save', '-'] },
+            { name: 'styling', items: ['font', 'size', 'format'] },
+        ]
+        };
+        //describe api
+        $scope.api = {
+        scope: $scope
+        };
+        $scope.$watch('content', function(newValue) {
+        $log.info(newValue);
+        });
+
+    }]);
+    </script>
+
+</body>
+</html>
